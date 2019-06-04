@@ -43,24 +43,24 @@ module Danger
     private
 
       def repo
-        @repository ||= github.pr_json[:base][:repo][:full_name]
+        @repository ||= bitbucket_cloud.pr_json[:base][:repo][:full_name]
       end
 
       def collaborators
-        @collaborators ||= github.api.collaborators(repo).map { |c| c.login }
+        @collaborators ||= bitbucket_cloud.api.collaborators(repo).map { |c| c.login }
       end
 
       def experienced_people
-        @experienced_people ||= github.api.pull_requests(repo).map { |pr| pr.user.login }.uniq
+        @experienced_people ||= bitbucket_cloud.api.pull_requests(repo).map { |pr| pr.user.login }.uniq
       end
 
       def new_member?
         new_members = collaborators - experienced_people
-        new_members.include? github.pr_author
+        new_members.include? bitbucket_cloud.pr_author
       end
 
       def greeting_words
-        @custom_words || "Welcome, #{github.pr_author} 🎉"
+        @custom_words || "Welcome, #{bitbucket_cloud.pr_author} 🎉!"
       end
   end
 end
